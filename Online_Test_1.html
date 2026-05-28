@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CAM: Online Test 1</title><style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{margin:0;font-family:Arial,sans-serif;background:#eef2ff;color:#222;user-select:none}header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:22px;text-align:center;border-radius:0 0 16px 16px}.w{max-width:1000px;margin:auto;padding:16px}.c{background:#fff;padding:18px;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,.1);margin:16px 0}.b{background:linear-gradient(135deg,#667eea,#764ba2);border:none;color:#fff;padding:12px 18px;border-radius:9px;cursor:pointer;min-height:44px;font-weight:bold;transition:.2s}.b:hover{transform:translateY(-2px)}input[type=text]{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;min-height:44px}.p{height:12px;background:#ddd;border-radius:20px;overflow:hidden}.pb{height:100%;background:linear-gradient(90deg,#667eea,#764ba2);transition:.3s}.tm{font-size:28px;font-weight:bold}.warn{color:#ef4444;animation:bl .8s infinite}@keyframes bl{50%{opacity:.2}}.lock{position:fixed;inset:0;background:#111d;display:none;align-items:center;justify-content:center;flex-direction:column;color:#fff;z-index:99}.ok{background:#dcfce7;padding:8px;border-radius:8px}.bad{background:#fee2e2;padding:8px;border-radius:8px}.h{display:none}
+</style></head><body>
+<div class="lock" id="lock"><div style="font-size:70px">🔒</div><h2>Test locked</h2><p>Kontaktuj učitele</p><div id="unlock"></div></div>
+<header><h1>CAM: Online Test 1</h1><div class="tm" id="t">15:00</div></header>
+<div class="w">
+<div class="c" id="intro"><h2>Instructions</h2><p>20 questions • 20 points • 15 minutes</p><p>Switching tabs, copying, screenshots or developer tools may lock the test.</p><input id="nm" placeholder="Name / code (min. 3 chars)"><br><br><button class="b" onclick="document.documentElement.requestFullscreen?.()">🔲 Fullscreen</button> <button class="b" id="go" disabled>Start test</button></div>
+<div id="app" class="h"><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><div><b id="id"></b></div><div class="p" style="flex:1"><div class="pb" style="width:100%"></div></div><div id="teach"></div></div><form id="f"></form><button class="b" onclick="sub()">Submit test</button></div>
+<div id="res" class="h"></div></div>
+<script>
+const TP='Advanced',TN='Adéla Stillerová',PIN='C3master';
+const O=['conscientious','naive','considerate','protective','hilarious','supportive','imaginative','thoughtful','insensitive','well-organised'];
+const Q=[
+['mc','I watched a new comedy series... It was absolutely _____.',4],
+['mc','The comments about overweight people were very _____.',8],
+['mc','It was a really _____ gesture.',7],
+['mc','Sam is very _____ of his younger sister.',3],
+['mc','Jared is probably the most _____ student.',0],
+['mc','Her plots are always really _____.',6],
+['mc','Her parents were _____ of her decision.',5],
+['mc2','I _____ Sofia at the shopping centre.',['bumped into']],
+['mc2','I have been _____ by him in the past.',['let down']],
+['mc2','We will have to _____ milk until tomorrow.',['do without']],
+['mc2','My new neighbour and I really _____.',['hit it off']],
+['mc2','They are hoping to _____ in a small town.',['settle down']],
+['mc2','Juan really _____ snowboarding.',['took to']],
+['mc2','She _____ all the work she is doing.',['puts it down to']],
+['txt','Replace with a multi-word verb: "considers me as"','looks on me as'],
+['txt','Replace with a multi-word verb: "become determined to reach"','catch up with'],
+['txt','Replace with a multi-word verb: "irritate me"','wind me up'],
+['txt','How many tasks in Listening Part 4 (C1)?','2'],
+['txt','Maximum points in Listening Part 4 (C1)?','10'],
+['txt','Minimum percentage to pass Cambridge exam?','60%']
+];
+const OPS={7:['hit it off with','headed off','bumped into','fell out with'],8:['let down','bumped into','taken to','wound up'],9:['settle down','take to','turn up','do without'],10:['hit it off','fell out','settled down','fell apart'],11:['catch up','dwell on','head off','settle down'],12:['took to','wound up','turned up','fell apart'],13:['does without','gets in the way of','puts it down to','took to']};
+let S={name:'',teacher:false,start:0,id:'',lock:false},cc=0;
+nm.oninput=e=>go.disabled=e.target.value.trim().length<3;
+go.onclick=()=>{
+ let n=nm.value.trim();S.teacher=false;
+ if(n===TN){let p=prompt('Teacher PIN')||'';if(p===PIN)S.teacher=true;}
+ S.name=n;S.start=Date.now();S.id='XK-'+Math.random().toString(36).slice(2,4).toUpperCase()+'-'+Math.random().toString(36).slice(2,5).toUpperCase();
+ sessionStorage.setItem('camtest','1');
+ intro.classList.add('h');app.classList.remove('h');id.innerText=S.id;
+ if(S.teacher)teach.innerHTML='<button class=b onclick="document.body.classList.toggle(`tv`)">Teacher view</button>';
+ render();timer();
+}
+function render(){f.innerHTML='';Q.forEach((q,i)=>{let d=document.createElement('div');d.className='c';let h='<b>'+(i+1)+'.</b> '+q[1];d.innerHTML=h;
+if(q[0]=='mc'){O.forEach((o,j)=>d.innerHTML+=`<label><input type=radio name=q${i} value="${j}"> ${o} ${S.teacher&&j==q[2]?'✅':''}</label><br>`);}
+else if(q[0]=='mc2'){OPS[i].forEach(o=>d.innerHTML+=`<label><input type=radio name=q${i} value="${o}"> ${o} ${S.teacher&&o==q[2][0]?'✅':''}</label><br>`);}
+else{d.innerHTML+=`<input type=text id=t${i}>`;if(S.teacher)d.innerHTML+=`<div class=ok>${q[2]}</div>`;}
+f.appendChild(d);})}
+function sub(){let pts=0,out='';Q.forEach((q,i)=>{let ok=false,u='';
+if(q[0]=='mc'){let r=document.querySelector('input[name=q'+i+']:checked');u=r?O[r.value]:'';ok=r&&+r.value===q[2];pts+=ok?.7:0;}
+else if(q[0]=='mc2'){let r=document.querySelector('input[name=q'+i+']:checked');u=r?r.value:'';ok=r&&u===q[2][0];pts+=ok?.7:0;}
+else{u=document.getElementById('t'+i).value.trim();ok=u.toLowerCase()===q[2].toLowerCase();pts+=ok?1.7:0;}
+out+=`<div class="${ok?'ok':'bad'}">${i+1}. ${ok?'Correct':'Wrong'} | Your answer: ${u||'-'} | Correct: ${q[0]=='mc'?O[q[2]]:q[2]}</div><br>`;});
+let pct=Math.ceil(pts/20*100),g=pct>=88?1:pct>=74?2:pct>=59?3:pct>=44?4:5;
+app.classList.add('h');res.classList.remove('h');
+res.innerHTML=`<div class=c style="max-width:700px;margin:auto;border:4px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#667eea,#764ba2) border-box"><h2>Results</h2><h1>${pct}%</h1><div class=p><div class=pb style="width:${pct}%"></div></div><p><b>${pts.toFixed(1)}/20 points</b></p><p>Grade: <b>${g}</b></p><p>${S.name}</p><p>${S.id}</p><p>Started: ${new Date(S.start).toLocaleString()}</p><p>Submitted: ${new Date().toLocaleString()}</p><p>Duration: ${Math.floor((Date.now()-S.start)/60000)} min</p><p><b>Send screenshot to your teacher!</b></p>${out}</div>`;
+sessionStorage.removeItem('camtest');
+}
+function timer(){let e=S.start+900000;let x=setInterval(()=>{let d=e-Date.now();if(d<0){clearInterval(x);sub();return}let m=Math.floor(d/60000),s=Math.floor(d/1000)%60;t.innerText=`${m}:${('0'+s).slice(-2)}`;if(d<300000)t.classList.add('warn');},1000)}
+function l(){if(S.lock)return;S.lock=true;lock.style.display='flex';unlock.innerHTML='<button class=b id=k>Unlock</button>';k.onclick=()=>{cc++;if(cc>=5)unlock.innerHTML='<input id=p type=password><button class=b onclick="u()">OK</button>'}}
+function u(){if(p.value===TP){lock.style.display='none';S.lock=false}}
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('copy',e=>e.preventDefault());
+document.addEventListener('cut',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{if((e.ctrlKey&&['u','i','s','p','a','c','x'].includes(e.key.toLowerCase()))||e.key==='F12'){e.preventDefault();l()}if(e.key==='PrintScreen')alert('Screenshots cannot be fully blocked.')});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&!app.classList.contains('h'))l()});
+window.addEventListener('blur',()=>{if(!app.classList.contains('h'))l()});
+window.addEventListener('pagehide',()=>{if(!app.classList.contains('h'))l()});
+window.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&!app.classList.contains('h'))l()});
+window.onbeforeunload=e=>{e.preventDefault();e.returnValue='Leave test?'};
+if(sessionStorage.getItem('camtest'))l();
+</script></body></html>
