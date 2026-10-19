@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCZ I. - Online test 2</title>
+<style>
+  :root {
+    --primary-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --bg-color: #f4f6f9;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #d1d5db;
+    --success-color: #22c55e;
+    --error-color: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+  body { background: var(--bg-color); color: var(--text-color); line-height: 1.5; padding-bottom: 40px; }
+  header { background: var(--primary-grad); color: white; padding: 20px; border-radius: 0 0 16px 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  header h1 { font-size: 1.5rem; margin-bottom: 5px; }
+  .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+  
+  /* Intro & Outro */
+  .card { background: var(--card-bg); border-radius: 14px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 20px; }
+  .btn { background: var(--primary-grad); color: white; border: none; padding: 12px 24px; border-radius: 9px; font-weight: bold; cursor: pointer; transition: transform 0.2s ease, opacity 0.2s; font-size: 1rem; min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  
+  /* Exercise Navigation Bar */
+  .nav-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; -webkit-overflow-scrolling: touch; }
+  .nav-btn { background: #e2e8f0; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; white-space: nowrap; transition: background 0.2s; min-height: 44px; min-width: 44px; }
+  .nav-btn.active { background: #667eea; color: white; }
+  .nav-btn.completed { background: #cbd5e1; border-bottom: 3px solid var(--success-color); }
+  
+  /* Exercise Panel */
+  .exercise-panel { display: none; }
+  .exercise-panel.active { display: block; }
+  .question-item { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #edf2f7; }
+  .question-item:last-child { border-bottom: none; }
+  .q-text { font-weight: 600; margin-bottom: 10px; display: block; }
+  
+  /* Inputs */
+  input[type="text"], textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border-color); border-radius: 8px; font-size: 1rem; outline: none; transition: border-color 0.2s; min-height: 44px; }
+  input[type="text"]:focus, textarea:focus { border-color: #667eea; }
+  .radio-label { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 6px; border-radius: 6px; transition: background 0.1s; min-height: 44px; }
+  .radio-label:hover { background: #f8fafc; }
+  .radio-label input { width: 20px; height: 20px; accent-color: #667eea; }
+
+  /* Footer Controls */
+  .panel-controls { display: flex; justify-content: space-between; margin-top: 20px; align-items: center; }
+  
+  /* Timer */
+  #timer-bar-container { background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+  #timer-bar { background: var(--primary-grad); height: 100%; width: 100%; transition: width 1s linear; }
+  .timer-warning { animation: blink 1s infinite; }
+  @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+  textarea.code-area { font-family: monospace; font-size: 0.85rem; background: #f8fafc; resize: none; height: 90px; margin: 10px 0; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>PCZ I. - Online test 2</h1>
+</header>
+
+<div class="container">
+  <!-- INTRO SCREEN -->
+  <div id="screen-intro" class="card">
+    <h2 style="margin-bottom: 15px;">PCZ I. - Online test 2</h2>
+
+    <p style="font-weight:600; margin-bottom:6px;">📋 CO TĚ ČEKÁ</p>
+    <ul style="margin-left:20px; margin-bottom:15px; line-height:1.7;">
+      <li>Celkem 20 otázek, 20 bodů</li>
+      <li>Časový limit: 12 minut</li>
+    </ul>
+
+    <p style="font-weight:600; margin-bottom:6px;">⛔ CO NENÍ DOVOLENO</p>
+    <ul style="margin-left:20px; margin-bottom:8px; line-height:1.7;">
+      <li>přepínat na jiné záložky a aplikace</li>
+      <li>dělit obrazovku a otevírat si nad testem jinou aplikaci</li>
+      <li>kopírovat text z testu</li>
+    </ul>
+    <p style="font-size:0.9rem; color:#64748b; margin-bottom:15px;">Odchody z okna se počítají. Při 2. se test zamkne a odemkne ho jen vyučující.</p>
+
+    <p style="font-weight:600; margin-bottom:6px;">🏁 JAK TO SKONČÍ</p>
+    <p style="margin-bottom:20px; color:#475569;">Po odevzdání výsledek neuvidíš. Dostaneš odevzdávací kód, který odešleš podle pokynů vyučujícího. Známku se dozvíš později.</p>
+
+    <div style="margin-bottom: 15px;">
+      <label style="display:block; font-weight:600; margin-bottom:5px;">Jméno a příjmení / kód (min. 3 znaky):</label>
+      <input type="text" id="student-name" placeholder="Zadej své jméno..." autocomplete="off">
+    </div>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <button class="btn" id="btn-fullscreen" style="background:#475569;">Režim celé obrazovky</button>
+      <button class="btn" id="btn-start" disabled>Spustit test</button>
+    </div>
+  </div>
+
+  <!-- TEST SCREEN -->
+  <div id="screen-test" class="hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 5px;">
+      <span id="timer-display" style="font-weight: bold; font-size: 1.1rem;">12:00</span>
+      <span id="progress-text" style="font-size: 0.9rem; color: #64748b;">Zodpovězeno: 0/20</span>
+    </div>
+    <div id="timer-bar-container"><div id="timer-bar"></div></div>
+
+    <div class="nav-bar" id="exercise-nav"></div>
+
+    <div class="card">
+      <div id="exercises-container"></div>
+      <div class="panel-controls">
+        <button class="btn" id="btn-prev" style="background:#64748b;">Předchozí</button>
+        <div id="next-submit-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTRO SCREEN -->
+  <div id="screen-outro" class="card hidden">
+    <h2 style="margin-bottom: 10px;">Test byl odevzdán</h2>
+    <p style="margin-bottom: 15px; color: #475569;">Zodpovězeno otázek: <span id="outro-answered"></span> / 20</p>
+    <p style="margin-bottom: 10px; font-weight: 600;">Tvůj odevzdávací kód:</p>
+    <textarea id="pole-kodu" class="code-area" readonly></textarea>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+      <button class="btn" id="btn-kopirovat">Zkopírovat odevzdávací kód</button>
+      <button class="btn" id="btn-stahnout" style="background:#475569;">Stáhnout jako .txt</button>
+    </div>
+    <p style="font-size: 0.9rem; margin-bottom: 15px;">Vlož kód do formuláře a odešli. Bez odeslání se test nepočítá.<br>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeluiFZTkCS0EMC8T1P1hQRSIwG19esr0VwZUAPZwLz6giFhA/viewform?usp=header" target="_blank" rel="noopener" style="color:#667eea; font-weight:bold; display:inline-block; margin-top:5px;">Otevřít formulář</a></p>
+    <p style="font-weight: bold; color: #0f172a;">Výsledky ti sdělí vyučující.</p>
+  </div>
+</div>
+
+<!-- MODUL RELACE -->
+<script>
+(function () {
+  'use strict';
+  if (window.Relace) return;
+  var cfg = { testId: 'PCZ I. - Online test 2', kod: '2026', rezim: 'JEDNOU', limit: 720, kodHodiny: '' };
+  function otisk(t) {
+    t = String(t == null ? '' : t).trim().toLowerCase();
+    var h1 = 0xdeadbeef, h2 = 0x41c6ce57, ch;
+    for (var i = 0; i < t.length; i++) {
+      ch = t.charCodeAt(i);
+      h1 = Math.imul(h1 ^ ch, 2654435761);
+      h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
+  }
+  var zaznam = null, klic = '', hotovoVrstva = null, onNovy = null;
+  function cti(k) {
+    try { var v = window.localStorage.getItem(k); if (v != null) return v; } catch (e) {}
+    try { var v2 = window.sessionStorage.getItem(k); if (v2 != null) return v2; } catch (e) {}
+    try {
+      var m = document.cookie.match(new RegExp('(?:^|; )' + k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)'));
+      return m ? decodeURIComponent(m[1]) : null;
+    } catch (e) {}
+    return null;
+  }
+  function zapis(k, v) {
+    try { window.localStorage.setItem(k, v); } catch (e) {}
+    try { window.sessionStorage.setItem(k, v); } catch (e) {}
+    try { document.cookie = k + '=' + encodeURIComponent(v) + ';path=/;max-age=15552000'; } catch (e) {}
+  }
+  function smaz(k) {
+    try { window.localStorage.removeItem(k); } catch (e) {}
+    try { window.sessionStorage.removeItem(k); } catch (e) {}
+    try { document.cookie = k + '=;path=/;max-age=0'; } catch (e) {}
+  }
+  function normJmeno(j) {
+    return String(j || '').trim().toLowerCase().replace(/\s+/g, ' ')
+      .normalize ? String(j || '').trim().toLowerCase().replace(/\s+/g, ' ').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      : String(j || '').trim().toLowerCase();
+  }
+  function klicPro(jmeno) { return 'relace:' + cfg.testId + ':' + normJmeno(jmeno); }
+  function klicZarizeni() { return 'relace:' + cfg.testId + ':__zarizeni__'; }
+  function nactiZarizeni() {
+    var raw = cti(klicZarizeni());
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch (e) { return null; }
+  }
+  function ulozZarizeni(jmeno) {
+    zapis(klicZarizeni(), JSON.stringify({ jmeno: jmeno, kdy: new Date().toISOString() }));
+  }
+  function nacti(jmeno) {
+    var raw = cti(klicPro(jmeno));
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch (e) { return null; }
+  }
+  function uloz() {
+    if (!zaznam || !klic) return;
+    zapis(klic, JSON.stringify(zaznam));
+  }
+  function zbyva() {
+    if (!zaznam || !zaznam.start) return cfg.limit;
+    var ubehlo = Math.floor((Date.now() - new Date(zaznam.start).getTime()) / 1000);
+    return Math.max(0, cfg.limit - ubehlo);
+  }
+  var BASE = 'position:fixed;inset:0;z-index:2147483500;display:flex;align-items:center;' +
+             'justify-content:center;padding:24px;background:rgba(8,10,18,.97);color:#e8eaf2;' +
+             'font-family:Georgia,serif;text-align:center;line-height:1.6';
+  function jeOvereno() {
+    if (!cfg.kodHodiny) return true;
+    return cti('relace:kh:' + cfg.testId) === cfg.kodHodiny;
+  }
+  function ukazBranu() {
+    if (hotovoVrstva) return;
+    hotovoVrstva = document.createElement('div');
+    hotovoVrstva.setAttribute('style', BASE);
+    hotovoVrstva.innerHTML =
+      '<div style="max-width:400px;width:100%">' +
+      '<div style="font-size:44px;margin-bottom:12px">🎫</div>' +
+      '<div style="font-size:18px;margin-bottom:6px">Zadej kód hodiny.</div>' +
+      '<input id="relace-kh" type="text" autocomplete="off" autocapitalize="off" ' +
+      'placeholder="Kód hodiny" style="width:100%;padding:12px;border-radius:9px;' +
+      'border:1.5px solid #3a3f52;background:#141824;color:#e8eaf2;font-family:Georgia,serif;' +
+      'font-size:17px;text-align:center;letter-spacing:2px;min-height:46px;margin-bottom:10px">' +
+      '<button id="relace-kh-ok" style="width:100%;padding:12px;border-radius:9px;border:none;' +
+      'background:#c9a227;color:#0a0c14;font-size:15px;font-weight:700;font-family:Georgia,serif;' +
+      'cursor:pointer;min-height:46px">Pokračovat</button>' +
+      '<div id="relace-kh-chyba" style="font-size:13px;color:#ef4444;margin-top:10px;min-height:18px"></div>' +
+      '</div>';
+    document.body.appendChild(hotovoVrstva);
+    var vstup = hotovoVrstva.querySelector('#relace-kh');
+    var chyba = hotovoVrstva.querySelector('#relace-kh-chyba');
+    function zkus() {
+      if (otisk(vstup.value) === cfg.kodHodiny) {
+        zapis('relace:kh:' + cfg.testId, cfg.kodHodiny);
+        if (hotovoVrstva && hotovoVrstva.parentNode) hotovoVrstva.parentNode.removeChild(hotovoVrstva);
+        hotovoVrstva = null;
+        if (onNovy) { try { onNovy(0); } catch (e) {} }
+      } else { chyba.textContent = 'Špatný kód hodiny.'; vstup.value = ''; }
+    }
+    hotovoVrstva.querySelector('#relace-kh-ok').onclick = zkus;
+    vstup.onkeydown = function (e) { if (e.key === 'Enter') zkus(); };
+  }
+  function ukazBlokovano(zar) {
+    if (hotovoVrstva) return;
+    hotovoVrstva = document.createElement('div');
+    hotovoVrstva.setAttribute('style', BASE);
+    var kdy = '';
+    try { kdy = new Date(zar.kdy).toLocaleString('cs-CZ', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (e) {}
+    hotovoVrstva.innerHTML =
+      '<div style="max-width:440px;width:100%">' +
+      '<div style="font-size:44px;margin-bottom:12px">🚫</div>' +
+      '<div style="font-size:18px;margin-bottom:6px">Na tomto zařízení už byl test spuštěn.</div>' +
+      '<div style="font-size:14px;opacity:.8;margin-bottom:16px">Psal ho: ' +
+      String(zar.jmeno || '—').replace(/[<>]/g, '') + (kdy ? ' (' + kdy + ')' : '') + '</div>' +
+      '<input id="relace-kod" type="password" inputmode="numeric" autocomplete="off" ' +
+      'placeholder="Kód vyučujícího" style="width:100%;padding:12px;border-radius:9px;' +
+      'border:1.5px solid #3a3f52;background:#141824;color:#e8eaf2;font-family:Georgia,serif;' +
+      'font-size:15px;text-align:center;min-height:46px;margin-bottom:10px">' +
+      '<button id="relace-odemk" style="width:100%;padding:12px;border-radius:9px;border:none;' +
+      'background:#c9a227;color:#0a0c14;font-size:15px;font-weight:700;font-family:Georgia,serif;' +
+      'cursor:pointer;min-height:46px">Povolit spuštění</button>' +
+      '<div id="relace-chyba" style="font-size:13px;color:#ef4444;margin-top:10px;min-height:18px"></div>' +
+      '</div>';
+    document.body.appendChild(hotovoVrstva);
+    var vstup = hotovoVrstva.querySelector('#relace-kod');
+    var chyba = hotovoVrstva.querySelector('#relace-chyba');
+    function zkus() {
+      if (String(vstup.value).trim() === String(cfg.kod)) {
+        smaz(klicZarizeni());
+        if (klic) smaz(klic);
+        zaznam = null;
+        if (hotovoVrstva && hotovoVrstva.parentNode) hotovoVrstva.parentNode.removeChild(hotovoVrstva);
+        hotovoVrstva = null;
+        if (onNovy) { try { onNovy(1); } catch (e) {} }
+      } else { chyba.textContent = 'Špatný kód.'; vstup.value = ''; }
+    }
+    hotovoVrstva.querySelector('#relace-odemk').onclick = zkus;
+    vstup.onkeydown = function (e) { if (e.key === 'Enter') zkus(); };
+  }
+  function ukazHotovo() {
+    if (hotovoVrstva) return;
+    hotovoVrstva = document.createElement('div');
+    hotovoVrstva.setAttribute('style', BASE);
+    hotovoVrstva.innerHTML =
+      '<div style="max-width:440px;width:100%">' +
+      '<div style="font-size:44px;margin-bottom:12px">✓</div>' +
+      '<div style="font-size:18px;margin-bottom:6px">Tento test jsi už odevzdal.</div>' +
+      '<input id="relace-kod" type="password" inputmode="numeric" autocomplete="off" ' +
+      'placeholder="Kód vyučujícího pro nový pokus" style="width:100%;padding:12px;' +
+      'border-radius:9px;border:1.5px solid #3a3f52;background:#141824;color:#e8eaf2;' +
+      'font-family:Georgia,serif;font-size:15px;text-align:center;min-height:46px;margin-bottom:10px">' +
+      '<button id="relace-odemk" style="width:100%;padding:12px;border-radius:9px;border:none;' +
+      'background:#c9a227;color:#0a0c14;font-size:15px;font-weight:700;font-family:Georgia,serif;' +
+      'cursor:pointer;min-height:46px">Povolit nový pokus</button>' +
+      '<div id="relace-chyba" style="font-size:13px;color:#ef4444;margin-top:10px;min-height:18px"></div>' +
+      '</div>';
+    document.body.appendChild(hotovoVrstva);
+    var vstup = hotovoVrstva.querySelector('#relace-kod');
+    var chyba = hotovoVrstva.querySelector('#relace-chyba');
+    function zkus() {
+      if (String(vstup.value).trim() === String(cfg.kod)) {
+        var pokus = (zaznam.pokus || 1) + 1;
+        smaz(klic);
+        smaz(klicZarizeni());
+        zaznam = null;
+        if (hotovoVrstva && hotovoVrstva.parentNode) hotovoVrstva.parentNode.removeChild(hotovoVrstva);
+        hotovoVrstva = null;
+        if (onNovy) { try { onNovy(pokus); } catch (e) {} }
+      } else { chyba.textContent = 'Špatný kód.'; vstup.value = ''; }
+    }
+    hotovoVrstva.querySelector('#relace-odemk').onclick = zkus;
+    vstup.onkeydown = function (e) { if (e.key === 'Enter') zkus(); };
+  }
+  window.Relace = {
+    nastav: function (o) {
+      o = o || {};
+      if (o.limit) cfg.limit = o.limit;
+      if (o.kod) cfg.kod = o.kod;
+      onNovy = o.onNovyPokus || null;
+    },
+    zahaj: function (jmeno) {
+      if (!jeOvereno()) { ukazBranu(); return { spustit: false, stav: 'kodHodiny' }; }
+      klic = klicPro(jmeno);
+      var d = nacti(jmeno);
+      if (cfg.rezim === 'JEDNOU') {
+        var zar = nactiZarizeni();
+        if (zar && normJmeno(zar.jmeno) !== normJmeno(jmeno)) {
+          ukazBlokovano(zar);
+          return { spustit: false, stav: 'blokovano' };
+        }
+      }
+      if (d && d.konec) { zaznam = d; ukazHotovo(); return { spustit: false, stav: 'hotovo', pokus: d.pokus || 1 }; }
+      if (d && d.start) { zaznam = d; ulozZarizeni(jmeno); return { spustit: true, stav: 'probiha', odpovedi: d.odpovedi || {}, zbyva: zbyva(), pokus: d.pokus || 1 }; }
+      zaznam = { jmeno: jmeno, start: new Date().toISOString(), odpovedi: {}, pokus: 1 };
+      uloz();
+      ulozZarizeni(jmeno);
+      return { spustit: true, stav: 'novy', zbyva: cfg.limit, pokus: 1 };
+    },
+    uloz: function (odpovedi, extra) {
+      if (!zaznam) return;
+      if (odpovedi) zaznam.odpovedi = odpovedi;
+      if (extra) zaznam.extra = extra;
+      uloz();
+    },
+    dokonci: function (kodOdevzdani) {
+      if (!zaznam) return;
+      zaznam.konec = new Date().toISOString();
+      zaznam.kod = kodOdevzdani || '';
+      uloz();
+    },
+    zbyvaSekund: function () { return zbyva(); },
+    pokus: function () { return zaznam && zaznam.pokus || 1; },
+    extra: function () { return zaznam && zaznam.extra || null; }
+  };
+})();
+</script>
+
+<!-- MODUL DOHLED -->
+<script>
+(function () {
+  'use strict';
+  if (window.Dohled) return;
+  var cfg = { rezim: 'ZAMEK', zamekPo: 2, kod: '2026', onLock: null, onUnlock: null, onEvent: null };
+  var bezi = false, zamceno = false;
+  var pocitadlo = 0, odemceni = 0;
+  var ochranaBezi = false, ochranaStyl = null;
+  function vlastniPole(e) {
+    var t = e && e.target;
+    if (!t || !t.closest) return false;
+    return !!t.closest('input, textarea, select, [contenteditable="true"]');
+  }
+  function naCopy(e) { if (!vlastniPole(e)) e.preventDefault(); }
+  function naContext(e) { if (!vlastniPole(e)) e.preventDefault(); }
+  function naKlavesu(e) {
+    var k = String(e.key || '').toLowerCase();
+    if (k === 'f12') { e.preventDefault(); return; }
+    if (!(e.ctrlKey || e.metaKey)) return;
+    if ((k === 'c' || k === 'x' || k === 'a' || k === 'v') && vlastniPole(e)) return;
+    if (k === 'c' || k === 'x' || k === 'a' || k === 'u' || k === 's' || k === 'p') e.preventDefault();
+  }
+  function zapniOchranu() {
+    if (ochranaBezi) return;
+    ochranaBezi = true;
+    document.addEventListener('copy', naCopy, true);
+    document.addEventListener('cut', naCopy, true);
+    document.addEventListener('contextmenu', naContext, true);
+    document.addEventListener('keydown', naKlavesu, true);
+    try {
+      ochranaStyl = document.createElement('style');
+      ochranaStyl.textContent =
+        'body{-webkit-user-select:none;-moz-user-select:none;user-select:none}' +
+        'input,textarea,select,[contenteditable="true"]{-webkit-user-select:text!important;' +
+        'user-select:text!important;-webkit-touch-callout:default}';
+      document.head.appendChild(ochranaStyl);
+    } catch (e) {}
+  }
+  function vypniOchranu() {
+    ochranaBezi = false;
+    document.removeEventListener('copy', naCopy, true);
+    document.removeEventListener('cut', naCopy, true);
+    document.removeEventListener('contextmenu', naContext, true);
+    document.removeEventListener('keydown', naKlavesu, true);
+    if (ochranaStyl && ochranaStyl.parentNode) ochranaStyl.parentNode.removeChild(ochranaStyl);
+    ochranaStyl = null;
+  }
+  function kopirujText(text, pole) {
+    vypniOchranu();
+    var hodnota = String(text == null ? '' : text);
+    function zalohou() {
+      try {
+        var el = pole || null;
+        var docasne = false;
+        if (!el) {
+          el = document.createElement('textarea');
+          el.value = hodnota;
+          el.setAttribute('style', 'position:fixed;top:0;left:0;opacity:0;height:1px;width:1px');
+          document.body.appendChild(el);
+          docasne = true;
+        }
+        var ro = el.hasAttribute && el.hasAttribute('readonly');
+        if (ro) el.removeAttribute('readonly');
+        el.focus();
+        if (el.setSelectionRange) el.setSelectionRange(0, hodnota.length);
+        else if (el.select) el.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        if (ro) el.setAttribute('readonly', 'readonly');
+        if (docasne && el.parentNode) el.parentNode.removeChild(el);
+        return ok;
+      } catch (e) { return false; }
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(hodnota).then(
+          function () { return true; },
+          function () { return zalohou(); });
+      }
+    } catch (e) {}
+    return Promise.resolve(zalohou());
+  }
+  var udalosti = [], sekundMimo = 0;
+  var t0 = 0, zaklad = null, epizoda = null, timerPoll = null, rafLast = 0, rafId = 0;
+  var poslTik = 0, posledniKonec = 0;
+  var vrstvaVar = null, vrstvaZamek = null;
+  function ted() { return Date.now(); }
+  function jeTextovePole() {
+    var a = document.activeElement;
+    if (!a) return false;
+    var t = (a.tagName || '').toUpperCase();
+    return t === 'INPUT' || t === 'TEXTAREA' || a.isContentEditable;
+  }
+  function siroke() { return !zaklad || window.innerWidth >= zaklad.w * 0.9; }
+  function zahaj(druh) {
+    if (!bezi || zamceno) return;
+    if (epizoda) {
+      if (ted() - epizoda.zac < 1500 && epizoda.druhy.indexOf(druh) === -1) epizoda.druhy.push(druh);
+      return;
+    }
+    epizoda = { zac: ted(), druh: druh, druhy: [druh] };
+  }
+  function ukonci() {
+    if (!epizoda) return;
+    var delka = Math.round((ted() - epizoda.zac) / 1000);
+    var e = epizoda; epizoda = null; posledniKonec = ted();
+    if (delka < 1 && e.druhy.every(function (d) { return d === 'fokus'; })) return;
+    sekundMimo += delka;
+    var zaznam = { t: Math.round((e.zac - t0) / 1000), d: delka, k: e.druhy.join('+') };
+    udalosti.push(zaznam);
+    pocitadlo++;
+    if (cfg.onEvent) { try { cfg.onEvent(zaznam); } catch (x) {} }
+    var pouzeFokus = e.druhy.every(function (d) { return d === 'fokus'; });
+    if (cfg.rezim !== 'ZAMEK') { if (!pouzeFokus || delka >= 5) ukazVarovani(zaznam); return; }
+    if (pouzeFokus && delka < 5) return;
+    zaznam.z = true;
+    var kZamku = udalosti.filter(function (u) { return u.z; }).length;
+    if (kZamku >= cfg.zamekPo) zamkni(); else ukazVarovani(zaznam, kZamku);
+  }
+  function zaznamenejPrimo(druh, delka, zacatekMs) {
+    if (!bezi || zamceno) return;
+    if (epizoda) return;
+    if (ted() - posledniKonec < 1500) return;
+    poslTik = ted();
+    sekundMimo += delka;
+    var zaznam = { t: Math.round((zacatekMs - t0) / 1000), d: delka, k: druh };
+    udalosti.push(zaznam);
+    pocitadlo++;
+    if (cfg.onEvent) { try { cfg.onEvent(zaznam); } catch (x) {} }
+    if (cfg.rezim !== 'ZAMEK') { ukazVarovani(zaznam); return; }
+    zaznam.z = true;
+    var kZamku = udalosti.filter(function (u) { return u.z; }).length;
+    if (kZamku >= cfg.zamekPo) zamkni(); else ukazVarovani(zaznam, kZamku);
+  }
+  function naVisibility() { if (document.hidden) zahaj('zalozka'); else ukonci(); }
+  function naPageHide() { zahaj('zalozka'); }
+  function naBlur() { if (!document.hidden) zahaj('fokus'); }
+  function naFocus() { ukonci(); }
+  function pollFokus() {
+    if (!bezi) return;
+    var nyni = ted();
+    if (poslTik) {
+      var mezera = nyni - poslTik;
+      if (mezera > 1500) zaznamenejPrimo('zalozka', Math.max(1, Math.round(mezera / 1000)), poslTik);
+    }
+    poslTik = nyni;
+    if (zamceno) return;
+    if (document.visibilityState === 'visible' && !document.hasFocus()) {
+      if (!epizoda) zahaj('fokus');
+    } else if (epizoda && epizoda.druhy.indexOf('zalozka') === -1) {
+      if (document.hasFocus()) ukonci();
+    }
+  }
+  function naResize() {
+    if (!bezi || zamceno || !zaklad) return;
+    var w = window.innerWidth, h = window.innerHeight;
+    var otoceno = (zaklad.w > zaklad.h) !== (w > h);
+    if (otoceno) { zaklad = { w: w, h: h }; return; }
+    if (w < zaklad.w * 0.85) { zahaj('split'); return; }
+    if (h < zaklad.h * 0.7 && !jeTextovePole()) { zahaj('split'); return; }
+    if (epizoda && epizoda.druhy.indexOf('split') !== -1) ukonci();
+  }
+  function rafTik(ts) {
+    if (!bezi) return;
+    if (rafLast && ts - rafLast > 1200) {
+      zaznamenejPrimo(document.visibilityState === 'visible' ? 'fokus' : 'zalozka',
+                      Math.round((ts - rafLast) / 1000), ted() - (ts - rafLast));
+    }
+    rafLast = ts;
+    rafId = window.requestAnimationFrame(rafTik);
+  }
+  var BASE_Z = 'position:fixed;inset:0;z-index:2147483600;display:flex;align-items:center;' +
+             'justify-content:center;padding:24px;background:rgba(8,10,18,.96);color:#e8eaf2;' +
+             'font-family:Georgia,serif;text-align:center;line-height:1.6';
+  function ukazVarovani(zaznam, kZamku) {
+    if (vrstvaZamek) return;
+    var jeSplit = zaznam.k.indexOf('split') !== -1;
+    if (!vrstvaVar) {
+      vrstvaVar = document.createElement('div');
+      vrstvaVar.setAttribute('style', BASE_Z);
+      document.body.appendChild(vrstvaVar);
+    }
+    var zbyva = cfg.rezim === 'ZAMEK' ? Math.max(0, cfg.zamekPo - (kZamku || 0)) : 0;
+    vrstvaVar.innerHTML =
+      '<div style="max-width:420px">' +
+      '<div style="font-size:40px;margin-bottom:12px">' + (jeSplit ? '⛶' : '⚠️') + '</div>' +
+      '<div style="font-size:17px;margin-bottom:8px">' +
+      (jeSplit ? 'Test musí běžet přes celou obrazovku.' : 'Byl jsi mimo okno testu.') + '</div>' +
+      '<div style="font-size:13px;opacity:.75;margin-bottom:18px">' +
+      (cfg.rezim === 'ZAMEK' ? (zbyva > 0 ? 'Ještě ' + zbyva + '× a test se zamkne.' : 'Při dalším se test zamkne.') : '') + '</div>' +
+      '<button id="dohled-pokr" style="padding:12px 22px;border-radius:10px;border:none;' +
+      'background:#c9a227;color:#0a0c14;font-size:15px;font-weight:700;font-family:Georgia,serif;' +
+      'cursor:pointer;min-height:46px">Pokračovat</button>' +
+      '<div id="dohled-pozn" style="font-size:12px;opacity:.7;margin-top:10px"></div></div>';
+    var btn = vrstvaVar.querySelector('#dohled-pokr');
+    var pozn = vrstvaVar.querySelector('#dohled-pozn');
+    function hlidej() {
+      if (!vrstvaVar) return;
+      var ok = !jeSplit || siroke();
+      btn.disabled = !ok;
+      btn.style.opacity = ok ? '1' : '.45';
+      pozn.textContent = ok ? '' : 'Vrať test na celou obrazovku.';
+      if (!ok) window.requestAnimationFrame(hlidej);
+    }
+    hlidej();
+    btn.onclick = function () { if (!btn.disabled) skryjVarovani(); };
+  }
+  function skryjVarovani() {
+    if (vrstvaVar && vrstvaVar.parentNode) vrstvaVar.parentNode.removeChild(vrstvaVar);
+    vrstvaVar = null;
+  }
+  function zamkni() {
+    if (zamceno) return;
+    zamceno = true;
+    skryjVarovani();
+    if (cfg.onLock) { try { cfg.onLock(); } catch (x) {} }
+    vrstvaZamek = document.createElement('div');
+    vrstvaZamek.setAttribute('style', BASE_Z);
+    vrstvaZamek.innerHTML =
+      '<div style="max-width:420px">' +
+      '<div style="font-size:44px;margin-bottom:12px">🔒</div>' +
+      '<div style="font-size:18px;margin-bottom:6px">Test je zamčený.</div>' +
+      '<div style="font-size:14px;opacity:.8;margin-bottom:18px">Zavolej vyučujícího. Tvoje odpovědi zůstaly uložené.</div>' +
+      '<input id="dohled-kod" type="password" inputmode="numeric" autocomplete="off" ' +
+      'placeholder="Odemykací kód vyučujícího" style="width:100%;padding:12px;border-radius:9px;' +
+      'border:1.5px solid #3a3f52;background:#141824;color:#e8eaf2;font-family:Georgia,serif;' +
+      'font-size:15px;text-align:center;min-height:46px;margin-bottom:10px">' +
+      '<button id="dohled-odemk" style="width:100%;padding:12px;border-radius:9px;border:none;' +
+      'background:#c9a227;color:#0a0c14;font-size:15px;font-weight:700;font-family:Georgia,serif;' +
+      'cursor:pointer;min-height:46px">Odemknout</button>' +
+      '<div id="dohled-chyba" style="font-size:13px;color:#ef4444;margin-top:10px;min-height:18px"></div>' +
+      '</div>';
+    document.body.appendChild(vrstvaZamek);
+    var vstup = vrstvaZamek.querySelector('#dohled-kod');
+    var chyba = vrstvaZamek.querySelector('#dohled-chyba');
+    function zkus() {
+      if (String(vstup.value).trim() === String(cfg.kod)) {
+        if (vrstvaZamek && vrstvaZamek.parentNode) vrstvaZamek.parentNode.removeChild(vrstvaZamek);
+        vrstvaZamek = null;
+        zamceno = false;
+        epizoda = null;
+        odemceni++;
+        udalosti.forEach(function (u) { u.z = false; });
+        zaklad = { w: window.innerWidth, h: window.innerHeight };
+        if (cfg.onUnlock) { try { cfg.onUnlock(); } catch (x) {} }
+      } else {
+        chyba.textContent = 'Špatný kód. Zkus to znovu.';
+        vstup.value = '';
+      }
+    }
+    vrstvaZamek.querySelector('#dohled-odemk').onclick = zkus;
+    vstup.onkeydown = function (e) { if (e.key === 'Enter') zkus(); };
+  }
+  window.Dohled = {
+    start: function (o) {
+      o = o || {};
+      if (o.rezim) cfg.rezim = o.rezim;
+      if (o.zamekPo) cfg.zamekPo = o.zamekPo;
+      if (o.kod) cfg.kod = o.kod;
+      cfg.onLock = o.onLock; cfg.onUnlock = o.onUnlock; cfg.onEvent = o.onEvent;
+      if (cfg.rezim === 'ZADNY') return;
+      bezi = true; t0 = ted(); poslTik = ted();
+      setTimeout(function () { zaklad = { w: window.innerWidth, h: window.innerHeight }; }, 2000);
+      document.addEventListener('visibilitychange', naVisibility);
+      window.addEventListener('blur', naBlur);
+      window.addEventListener('focus', naFocus);
+      window.addEventListener('pagehide', naPageHide);
+      window.addEventListener('resize', naResize);
+      timerPoll = setInterval(pollFokus, 500);
+      rafId = window.requestAnimationFrame(rafTik);
+      zapniOchranu();
+    },
+    stop: function () {
+      bezi = false;
+      clearInterval(timerPoll);
+      if (rafId) window.cancelAnimationFrame(rafId);
+      document.removeEventListener('visibilitychange', naVisibility);
+      window.removeEventListener('blur', naBlur);
+      window.removeEventListener('focus', naFocus);
+      window.removeEventListener('resize', naResize);
+      skryjVarovani();
+      vypniOchranu();
+    },
+    povolKopirovani: function () { vypniOchranu(); },
+    kopiruj: function (text, pole) { return kopirujText(text, pole); },
+    jeZamceno: function () { return zamceno; },
+    isLocked: function () { return zamceno; },
+    telemetrie: function () {
+      return { c: udalosti.length, s: sekundMimo, o: odemceni, e: udalosti };
+    },
+    obnov: function (t) {
+      if (!t) return;
+      udalosti = t.e || []; sekundMimo = t.s || 0; odemceni = t.o || 0;
+    }
+  };
+  window.Dohled.telemetry = window.Dohled.telemetrie;
+  window.Dohled.restore = window.Dohled.obnov;
+  window.Dohled.init = window.Dohled.start;
+  window.Dohled.allowCopy = window.Dohled.povolKopirovani;
+  window.Dohled.copy = window.Dohled.kopiruj;
+})();
+</script>
+
+<!-- HLAVNÍ LOGIKA TESTU -->
+<script>
+(function() {
+  'use strict';
+
+  // Ochranný testovací naslouchač
+  window.addEventListener('message', function(ev){
+    var d = ev.data || {};
+    if (d.type !== 'SELFCHECK_BUILD') return;
+    try {
+      var code = sestavOdevzdavaciKod(d.answers);
+      parent.postMessage({ type:'SELFCHECK_CODE', code: code }, '*');
+    } catch (err) {
+      parent.postMessage({ type:'SELFCHECK_ERROR', where:'student', msg:String(err) }, '*');
+    }
+  });
+
+  const TEST_ID = "PCZ I. - Online test 2";
+  const SUBMIT_SALT = "NS6P7SM5QWMG";
+  const testData = {
+   "nazev": "PCZ I. - Online test 2",
+   "pokyny": "Complete all exercises carefully. Make sure your answers are spelled correctly.",
+   "cviceni": [
+    {
+     "id": "c1",
+     "nadpis": "Exercise 1: Multiple choice (Vocabulary)",
+     "zadani": "Choose the correct word to complete each sentence.",
+     "typ": "choice",
+     "otazky": [
+      { "id": "c1q1", "text": "Your essay looks good, but can I make one ___ ? Make sure you check your spelling!", "moznosti": ["advice", "impression", "instruction", "suggestion"] },
+      { "id": "c1q2", "text": "One of my favourite authors is giving a short ___ on her latest novel at my university next week.", "moznosti": ["information", "talk", "advice", "comment"] },
+      { "id": "c1q3", "text": "If you decide to end your gym membership after the trial period, they will give you a ___.", "moznosti": ["refund", "talk", "recommendation", "suggestion"] },
+      { "id": "c1q4", "text": "Joel has been asked to give a ___ at his brother's wedding. He is a bit nervous, but I'm sure it will be great.", "moznosti": ["lecture", "talk", "speech", "comment"] },
+      { "id": "c1q5", "text": "Riaz performed really well in the interview. He made a really strong ___ on the whole panel.", "moznosti": ["impression", "comment", "recommendation", "talk"] },
+      { "id": "c1q6", "text": "Marc managed to ___ Swedish pretty quickly after moving there.", "moznosti": ["rusty", "subtitles", "pick up", "command"] },
+      { "id": "c1q7", "text": "Borja has an excellent ___ of English.", "moznosti": ["bilingual", "fluency", "mother tongue", "command"] },
+      { "id": "c1q8", "text": "James' Spanish is a bit ___, as he hasn't spoken it for a number of years.", "moznosti": ["speak accurately", "rusty", "subtitles", "bilingual"] }
+     ]
+    },
+    {
+     "id": "c2",
+     "nadpis": "Exercise 2: Word Formation",
+     "zadani": "Complete the sentences with the correct derived form of the capitalized word in brackets.",
+     "typ": "open",
+     "otazky": [
+      { "id": "c2q1", "text": "Word formation: It was ___ (FOOL) of him to think that she would forgive him." },
+      { "id": "c2q2", "text": "Word formation: Children rarely show any ___ (APPRECIATE) for what their parents do for them." },
+      { "id": "c2q3", "text": "Word formation: You don't ___ (NECESSARY) need to wear a suit, but you need to be dressed well." }
+     ]
+    },
+    {
+     "id": "c3",
+     "nadpis": "Exercise 3: Key-word Transformation",
+     "zadani": "Complete the second sentence so that it has a similar meaning to the first one, using the word given. Do not change the word given. Use between 2 and 5 words.",
+     "typ": "transform",
+     "otazky": [
+      { "id": "c3q1", "text": "1. He was treated unfairly by his teachers.\nDESERVE\n2. He ___ treated that way by his teachers." },
+      { "id": "c3q2", "text": "1. The children had a lot of respect for their grandparents.\nLOOKED\n2. The children ___ their grandparents." }
+     ]
+    },
+    {
+     "id": "c4",
+     "nadpis": "Exercise 4: Categorization (Linking Words)",
+     "zadani": "Match the linking words used in an essay to their function in the text.",
+     "typ": "choice",
+     "otazky": [
+      { "id": "c4q1", "text": "What is the primary function of 'Then' in an essay context?", "moznosti": ["Sequencing", "Addition", "Contrasting", "Summary"] },
+      { "id": "c4q2", "text": "What is the primary function of 'Moreover' in an essay?", "moznosti": ["Giving examples", "Summary", "Contrasting", "Addition"] },
+      { "id": "c4q3", "text": "What is the primary function of 'In conclusion' in an essay?", "moznosti": ["Sequencing", "Giving examples", "Summary", "Addition"] },
+      { "id": "c4q4", "text": "What is the primary function of 'For instance' in an essay?", "moznosti": ["Addition", "Giving examples", "Summary", "Contrasting"] },
+      { "id": "c4q5", "text": "What is the primary function of 'On the other hand' in an essay?", "moznosti": ["Sequencing", "Giving examples", "Contrasting", "Addition"] }
+     ]
+    },
+    {
+     "id": "c5",
+     "nadpis": "Exercise 5: Essay Structure & Style",
+     "zadani": "Choose the correct answer for essay writing rules.",
+     "typ": "choice",
+     "otazky": [
+      { "id": "c5q1", "text": "How many paragraphs do you have to divide your essay into?", "moznosti": ["Always exactly 3 paragraphs", "Usually 4 to 5 paragraphs", "Only 1 long paragraph"] },
+      { "id": "c5q2", "text": "Which one of these is NOT an example of INFORMAL language and you CAN use it in an essay?", "moznosti": ["passive voice (It will be done)", "abbreviations (ASAP)", "contractions (don't)", "phrasal verbs (to get on)"] }
+     ]
+    }
+   ]
+  };
+
+  let state = {
+    jmeno: '',
+    answers: {},
+    currentEx: 0,
+    startTime: null,
+    timerInterval: null,
+    totalSeconds: 720
+  };
+
+  const nameInput = document.getElementById('student-name');
+  const startBtn = document.getElementById('btn-start');
+  const fullscreenBtn = document.getElementById('btn-fullscreen');
+  const introScreen = document.getElementById('screen-intro');
+  const testScreen = document.getElementById('screen-test');
+  const outroScreen = document.getElementById('screen-outro');
+
+  nameInput.oninput = function() {
+    state.jmeno = nameInput.value.trim();
+    startBtn.disabled = state.jmeno.length < 3;
+  };
+
+  fullscreenBtn.onclick = function() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  };
+
+  startBtn.onclick = function() {
+    try {
+      window.Relace.nastav({ onNovyPokus: function(p) { location.reload(); } });
+      let res = window.Relace.zahaj(state.jmeno);
+      if (!res.spustit) return;
+      if (res.stav === 'probiha') {
+        state.answers = res.odpovedi || {};
+      }
+      state.totalSeconds = res.zbyva;
+      state.startTime = new Date().toISOString();
+      
+      introScreen.classList.add('hidden');
+      testScreen.classList.remove('hidden');
+      
+      buildTestUI();
+      window.Dohled.start();
+      startTimer();
+    } catch(e) {
+      alert("Chyba při spuštění: " + e.message);
+    }
+  };
+
+  function buildTestUI() {
+    const navContainer = document.getElementById('exercise-nav');
+    const container = document.getElementById('exercises-container');
+    navContainer.innerHTML = '';
+    container.innerHTML = '';
+
+    testData.cviceni.forEach((ex, idx) => {
+      // Nav button
+      let btn = document.createElement('button');
+      btn.className = 'nav-btn' + (idx === 0 ? ' active' : '');
+      btn.textContent = idx + 1;
+      btn.onclick = () => switchExercise(idx);
+      navContainer.appendChild(btn);
+
+      // Panel
+      let panel = document.createElement('div');
+      panel.className = 'exercise-panel' + (idx === 0 ? ' active' : '');
+      panel.dataset.index = idx;
+      
+      let title = document.createElement('h3');
+      title.textContent = ex.nadpis;
+      title.style.marginBottom = '10px';
+      panel.appendChild(title);
+
+      let desc = document.createElement('p');
+      desc.textContent = ex.zadani;
+      desc.style.marginBottom = '20px';
+      desc.style.color = '#64748b';
+      panel.appendChild(desc);
+
+      ex.otazky.forEach(q => {
+        let qDiv = document.createElement('div');
+        qDiv.className = 'question-item';
+        
+        let qText = document.createElement('span');
+        qText.className = 'q-text';
+        qText.textContent = q.text;
+        qDiv.appendChild(qText);
+
+        if (ex.typ === 'choice') {
+          q.moznosti.forEach(opt => {
+            let label = document.createElement('label');
+            label.className = 'radio-label';
+            let radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = q.id;
+            radio.value = opt;
+            if (state.answers[q.id] === opt) radio.checked = true;
+
+            radio.onchange = function() {
+              state.answers[q.id] = opt;
+              saveAndSync();
+            };
+
+            label.appendChild(radio);
+            let span = document.createElement('span');
+            span.textContent = opt;
+            label.appendChild(span);
+            qDiv.appendChild(label);
+          });
+        } else {
+          let input = document.createElement('input');
+          input.type = 'text';
+          input.value = state.answers[q.id] || '';
+          input.placeholder = 'Type your answer...';
+          input.oninput = function() {
+            state.answers[q.id] = input.value.trim();
+            saveAndSync();
+          };
+          qDiv.appendChild(input);
+        }
+        panel.appendChild(qDiv);
+      });
+      container.appendChild(panel);
+    });
+
+    updateNavigationState();
+  }
+
+  function switchExercise(idx) {
+    state.currentEx = idx;
+    document.querySelectorAll('.exercise-panel').forEach((p, i) => {
+      p.classList.toggle('active', i === idx);
+    });
+    document.querySelectorAll('.nav-btn').forEach((b, i) => {
+      b.classList.toggle('active', i === idx);
+    });
+    updateNavigationState();
+  }
+
+  function updateNavigationState() {
+    const prevBtn = document.getElementById('btn-prev');
+    const nextContainer = document.getElementById('next-submit-container');
+    
+    prevBtn.disabled = state.currentEx === 0;
+    nextContainer.innerHTML = '';
+
+    if (state.currentEx === testData.cviceni.length - 1) {
+      let submitBtn = document.createElement('button');
+      submitBtn.className = 'btn';
+      submitBtn.textContent = 'Odevzdat test';
+      submitBtn.style.background = 'var(--success-color)';
+      submitBtn.onclick = confirmAndSubmit;
+      nextContainer.appendChild(submitBtn);
+    } else {
+      let nextBtn = document.createElement('button');
+      nextBtn.className = 'btn';
+      nextBtn.textContent = 'Další';
+      nextBtn.onclick = () => switchExercise(state.currentEx + 1);
+      nextContainer.appendChild(nextBtn);
+    }
+
+    // Update nav buttons completed styling
+    document.querySelectorAll('.nav-btn').forEach((btn, idx) => {
+      let ex = testData.cviceni[idx];
+      let answeredCount = ex.otazky.filter(q => state.answers[q.id] && state.answers[q.id] !== '').length;
+      if (answeredCount === ex.otazky.length) {
+        btn.classList.add('completed');
+      } else {
+        btn.classList.remove('completed');
+      }
+    });
+
+    updateProgressCounter();
+  }
+
+  function updateProgressCounter() {
+    let totalQ = 0;
+    let answeredQ = 0;
+    testData.cviceni.forEach(ex => {
+      ex.otazky.forEach(q => {
+        totalQ++;
+        if (state.answers[q.id] && state.answers[q.id] !== '') answeredQ++;
+      });
+    });
+    document.getElementById('progress-text').textContent = `Zodpovězeno: ${answeredQ}/${totalQ}`;
+  }
+
+  function saveAndSync() {
+    try {
+      window.Relace.uloz(state.answers);
+    } catch(e) {}
+    updateNavigationState();
+  }
+
+  function startTimer() {
+    const timerDisplay = document.getElementById('timer-display');
+    const timerBar = document.getElementById('timer-bar');
+    
+    state.timerInterval = setInterval(() => {
+      state.totalSeconds = window.Relace.zbyvaSekund();
+      let m = Math.floor(state.totalSeconds / 60);
+      let s = state.totalSeconds % 60;
+      timerDisplay.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+      timerBar.style.width = (state.totalSeconds / 720 * 100) + '%';
+
+      if (state.totalSeconds <= 300) {
+        timerDisplay.classList.add('timer-warning');
+      }
+
+      if (state.totalSeconds <= 0) {
+        clearInterval(state.timerInterval);
+        submitTest(true);
+      }
+    }, 1000);
+  }
+
+  function confirmAndSubmit() {
+    let totalQ = 0;
+    let answeredQ = 0;
+    testData.cviceni.forEach(ex => {
+      ex.otazky.forEach(q => {
+        totalQ++;
+        if (state.answers[q.id] && state.answers[q.id] !== '') answeredQ++;
+      });
+    });
+    let chybi = totalQ - answeredQ;
+    let zprava = (chybi > 0 ? `Nevyplněno máš ${chybi} z ${totalQ} otázek.\n\n` : '')
+      + 'Opravdu chceš test odevzdat? Zpátky už se k němu nedostaneš.';
+    if (confirm(zprava)) {
+      submitTest(false);
+    }
+  }
+
+  function base64url(str) {
+    return btoa(unescape(encodeURIComponent(str)))
+      .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+  }
+
+  function cyrb53(str, seed = 0) {
+    let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+    for (let i = 0, ch; i < str.length; i++) {
+      ch = str.charCodeAt(i);
+      h1 = Math.imul(h1 ^ ch, 2654435761);
+      h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36).toUpperCase();
+  }
+
+  function sestavOdevzdavaciKod(ansMap) {
+    let telemetrie = {};
+    try { if (window.Dohled) telemetrie = window.Dohled.telemetrie(); } catch(e) {}
+    
+    let payload = {
+      v: 1,
+      t: TEST_ID,
+      n: state.jmeno,
+      s: state.startTime,
+      e: new Date().toISOString(),
+      d: 720 - state.totalSeconds,
+      a: ansMap,
+      x: telemetrie,
+      o: telemetrie.o || 0
+    };
+
+    let jsonStr = JSON.stringify(payload);
+    let b64 = base64url(jsonStr);
+    let hash = cyrb53(b64 + SUBMIT_SALT);
+    return `TST1.${b64}.${hash}`;
+  }
+
+  function submitTest(isTimeout) {
+    if (state.timerInterval) clearInterval(state.timerInterval);
+    
+    let telemetrie = {};
+    try { 
+      if (window.Dohled) { 
+        window.Dohled.stop(); 
+        telemetrie = window.Dohled.telemetrie(); 
+      } 
+    } catch (e) {}
+
+    let code = sestavOdevzdavaciKod(state.answers);
+    
+    try {
+      window.Relace.dokonci(code);
+    } catch(e) {}
+
+    testScreen.classList.add('hidden');
+    outroScreen.classList.remove('hidden');
+
+    let totalQ = 0;
+    let answeredQ = 0;
+    testData.cviceni.forEach(ex => {
+      ex.otazky.forEach(q => {
+        totalQ++;
+        if (state.answers[q.id] && state.answers[q.id] !== '') answeredQ++;
+      });
+    });
+
+    document.getElementById('outro-answered').textContent = answeredQ;
+    const codeArea = document.getElementById('pole-kodu');
+    codeArea.value = code;
+
+    document.getElementById('btn-kopirovat').onclick = function() {
+      let btn = this;
+      let kopie = (window.Dohled && window.Dohled.kopiruj)
+        ? window.Dohled.kopiruj(code, codeArea)
+        : (navigator.clipboard && navigator.clipboard.writeText
+            ? navigator.clipboard.writeText(code).then(function(){ return true; }, function(){ return false; })
+            : Promise.resolve(false));
+      kopie.then(function(ok) {
+        if (ok) {
+          btn.textContent = 'Zkopírováno ✓';
+        } else {
+          codeArea.focus();
+          try { codeArea.setSelectionRange(0, codeArea.value.length); } catch(e) {}
+          btn.textContent = 'Kód je označený — zkopíruj ho ručně';
+        }
+      });
+    };
+
+    document.getElementById('btn-stahnout').onclick = function() {
+      let blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+      let url = URL.createObjectURL(blob);
+      let a = document.createElement('a');
+      a.href = url;
+      a.download = `TEST_${TEST_ID}_${state.jmeno}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    if (isTimeout) {
+      alert("Čas vypršel. Test byl automaticky odevzdán.");
+    }
+  }
+
+})();
+</script>
+
+</body>
+</html>
